@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!-- Head imports -->
+  <%-include("./partials/head")%>
+
+<body class="bg-dark">
+
+  <!-- navbar imports -->
+  <%-include("./partials/navbar")%>
+
+  <div class="container">
+    <div class="row my-5">
+      <div class="col-12 col-md-6 d-flex justify-content-center my-4">
+        <img style="width: 180px;" src="/img/<%= channel.channelIcon %>" alt="Channel Logo" srcset="">
+      </div>
+      <div class="col-12 col-md-6 text-light p-4">
+        <h1><%= channel.channelName %></h1>
+        <p><%= channel.email %></p>
+        <span class="badge bg-dark"> Views: <%= channel.views %></span>
+      </div>
+    </div>
+
+
+  </div>
+
+  <!-- VideosContainer -->
+ <%-include("./partials/videosContainer", { videosCaption:"Posted videos", videos:channel.videos})%>
+  
+
+   <!-- footer -->
+   <%-include("./partials/footer")%>
+  
+  
+</body>
+</html>

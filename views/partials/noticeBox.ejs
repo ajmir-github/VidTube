@@ -1,0 +1,20 @@
+<!-- notice of info -->
+<% if (typeof notice !== "undefined") { %>
+  <div class="alert alert-info" role="alert">
+    <%= notice.message %>
+  </div>
+<% } %>
+
+<!-- error of info -->
+<% if (typeof error !== "undefined") { %>
+  <div class="alert alert-danger" role="alert">
+    <%= error.message %>
+  </div>
+<% } %>
+
+<!-- Link -->
+<% if (typeof link !== "undefined") { %>
+  <div class="alert alert-secondary" role="alert">
+    Click <a class="alert-link" href="<%= link.href %>">here</a> to <%= link.message %>
+  </div>
+<% } %>

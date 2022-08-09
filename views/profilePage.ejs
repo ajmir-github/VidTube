@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!-- Head imports -->
+  <%-include("./partials/head")%>
+
+<body class="bg-dark text-light">
+  
+  <!-- navbar imports -->
+  <%-include("./partials/navbar")%>
+
+
+  <div class="container my-5">
+    <div class="row mt-5">
+      <div class="col-12 col-md-6 d-flex justify-content-center my-4">
+        <img style="width: 180px;" src="/img/<%= auth.theChannel.channelIcon %>" alt="Channel Logo" srcset="">
+      </div>
+      <div class="col-12 col-md-6 text-light p-4" >
+        <h1><%= auth.theChannel.channelName %></h1>
+        <div>
+          <i><%= auth.theChannel.email %></i>
+        </div>
+        <div>
+          <i>Views: <%= auth.theChannel.views %></i>
+        </div>
+        <div class="row my-2">
+          <a class="btn btn-outline-danger" href="/channel/<%= auth.theChannel._id %>">View my channel page</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <div class="container my-5">
+    <form action="/profile/upload_thumbnail" method="post" enctype="multipart/form-data">
+      <div class="">
+        <h4>Upload a new thumbnail</h4>
+      </div>
+     
+      <div class="mb-3 mt-3">
+        <label for="imageInput">Select a thumbnail:</label>
+        <input type="file" class="form-control" id="imageInput" name="thumbnail" accept="image/*">
+      </div>
+  
+      <button type="submit" class="btn btn-primary">Upload</button>
+    </form>
+  </div>
+  
+
+  <div class="container my-5">
+    <form action="/profile/upload_video" method="post" enctype="multipart/form-data">
+      <div class="">
+        <h4>Upload a video</h4>
+      </div>
+      <div class="mb-3 mt-3">
+        <label for="title" class="form-label">Title:</label>
+        <input type="text" class="form-control" id="title" placeholder="Enter the title" name="title">
+      </div>
+
+      <div class="mb-3 mt-3">
+        <label for="keywords" class="form-label">Keywords:</label>
+        <input type="text" class="form-control" id="keywords" placeholder="Enter the title" name="keywords">
+      </div>
+
+      <div class="mb-3 mt-3">
+        <label for="description">descriptions:</label>
+        <textarea class="form-control" rows="5" id="description" name="description"></textarea>
+      </div>
+      
+      <div class="mb-3 mt-3">
+        <label for="videoInput">Select a video:</label>
+        <input type="file" class="form-control" id="videoInput" name="video" accept="video/*">
+      </div>
+      
+      <div class="mb-3 mt-3">
+        <label for="imageInput">Select a thumbnail:</label>
+        <input type="file" class="form-control" id="imageInput" name="thumbnail" accept="image/*">
+      </div>
+  
+      <button type="submit" class="btn btn-primary">Upload</button>
+    </form>
+  </div>
+  
+
+</body>
+</html>

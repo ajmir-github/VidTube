@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!-- Head imports -->
+  <%-include("./partials/head")%>
+
+<body class="bg-dark text-light">
+
+  <!-- navbar imports -->
+  <%-include("./partials/navbar")%>
+
+  <div class="container pt-5 h4">
+    <!-- noticeBox imports -->
+    <%-include("./partials/noticeBox")%>
+  </div>
+
+  <div class="container py-2">
+    <div class="row justify-content-center">
+
+      <form class="col-12 col-md-4 my-4" action="/auth/sign_in" method="post">
+        <h2>Sign in</h2>
+        <div class="mb-3">
+          <label for="username" class="form-label">Username:</label>
+          <input required type="text" class="form-control" id="username" name="username">
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password:</label>
+          <input required type="password" class="form-control" id="password" name="password">
+        </div>
+        <div class="col">
+          <input type="submit" class="btn btn-outline-danger form-control" value="Sign in">
+        </div>
+      </form>
+
+      <!-- sign in form -->
+      <form class="col-12 col-md-4 my-4" action="/auth/sign_up" method="post">
+        <h2>Sign Up</h2>
+        <div class="mb-3">
+          <label for="username" class="form-label">Username:</label>
+          <input required type="text" class="form-control" id="username" name="username">
+        </div>
+  
+        <div class="mb-3">
+          <label for="password" class="form-label">Password:</label>
+          <input required type="password" class="form-control" id="password" name="password">
+        </div>
+  
+  
+        <div class="mb-3">
+          <label for="email" class="form-label">Email:</label>
+          <input required type="email" class="form-control" id="email" name="email">
+        </div>
+        <div class="mb-3">
+          <label for="channelName" class="form-label">channel name:</label>
+          <input required type="text" class="form-control" id="channelName" name="channelName">
+        </div>
+  
+        <div class="col">
+          <input type="submit" class="btn btn-outline-danger form-control" value="Sign up">
+        </div>
+      </form>
+      <!-- end of sign in form -->
+    </div>
+
+
+  </div>
+  
+  
+
+
+  <!-- footer -->
+  <%-include("./partials/footer")%>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+<div class="col-md-3 text-light">
+  <div class="position-sticky" style="top: 2rem;">
+    <div class="p-4 mb-3 border border-danger text-light rounded">
+      <h4 class="fst-italic text-danger">About</h4>
+      <p class="mb-0">
+        I have created this website so you could make a video that could impact others, and upload it here. Please do not hesitate to do so! 
+      </p>
+    </div>
+
+    <!-- Departments -->
+    <% if(typeof departments !== "undefined"){ %>
+      <div class="p-4">
+        <h4 class="fst-italic text-danger">Departments</h4>
+        <ol class="list-unstyled mb-0">
+          <% departments.forEach(department =>{ %>
+            <li><a class="text-light btn-sm" href="/?department=<%= department %>"><%= department %></a></li>
+          <% }) %>
+        </ol>
+      </div>
+    <% } %>
+
+    <div class="p-4">
+      <h4 class="fst-italic text-danger">Top videos</h4>
+      <ol class="list-unstyled">
+        <li><a class="text-light btn-sm" href="#">GitHub</a></li>
+        <li><a class="text-light btn-sm" href="#">Twitter</a></li>
+        <li><a class="text-light btn-sm" href="#">Facebook</a></li>
+      </ol>
+    </div>
+  </div>
+</div>

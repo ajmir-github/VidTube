@@ -1,0 +1,68 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow" aria-label="Eighth navbar example">
+  <div class="container">
+    <a class="navbar-brand" href="/" style="font-weight: bold;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;"><span class="text-danger">Vid</span>Tube</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExample07">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
+        </li>
+
+        <!-- Departments -->
+        <!-- <% if(typeof departments !== "undefined"){ %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="dropdown07" data-bs-toggle="dropdown" aria-expanded="false">Departments</a>
+            <ul class="dropdown-menu" aria-labelledby="dropdown07">
+              <% departments.forEach(department =>{ %>
+                <li><a class="dropdown-item" href="/?department=<%= department %>"><%= department %></a></li>
+              <% }) %>
+            </ul>
+          </li>
+        <% } %> -->
+
+
+        <li class="nav-item">
+          <a class="nav-link" href="/channels">Channels</a>
+        </li>
+
+        <% if(typeof auth !== "undefined"){ %>
+          <% if(auth.signedIn) { %>
+            <li class="nav-item">
+              <a class="nav-link" href="/profile"><%= auth.theChannel?.channelName %></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/auth/sign_out">Sign out</a>
+            </li>
+          <% } else { %>
+            <li class="nav-item">
+              <a class="nav-link" href="/auth/sign_in">Sign In</a>
+            </li>
+
+          <% } %>
+        <% } %>
+        
+
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">About</a>
+        </li>
+        
+      </ul>
+      <form class="col d-flex" method="get">
+        
+        
+        <input required minlength="3" list="departmentOptions" class="form-control me-2 bg-dark text-light border-secondary" type="search" placeholder="Search" aria-label="Search" name="search">
+        <!-- department Options -->
+        <% if(typeof departments !== "undefined"){ %>
+          <datalist id="departmentOptions">
+            <% departments.forEach(dep =>{ %>
+              <option value="<%=dep %>">
+            <% }) %>
+          </datalist>
+        <% } %>        <button class="btn btn-outline-danger" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</nav>

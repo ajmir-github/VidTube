@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!-- Head imports -->
+  <%-include("./partials/head")%>
+
+<body class="bg-dark text-light">
+  
+  <!-- navbar imports -->
+  <%-include("./partials/navbar")%>
+
+
+
+
+
+
+
+
+  <div class="container my-5">
+    <form method="post">
+      <div class="">
+        <h4>Edit the description</h4>
+      </div>
+      <div class="mb-3 mt-3">
+        <label for="title" class="form-label">Title:</label>
+        <input type="text" class="form-control" id="title" placeholder="Enter the title" name="title" value="<%=video.title%>">
+      </div>
+
+      <div class="mb-3 mt-3">
+        <label for="keywords" class="form-label">Keywords:</label>
+        <input type="text" class="form-control" id="keywords" placeholder="Enter the title" name="keywords" value="<%=video.keywords %>">
+      </div>
+
+      <div class="mb-3 mt-3">
+        <label for="description">descriptions:</label>
+        <textarea class="form-control" rows="5"  id="description" name="description">
+          <%=video.description %>
+        </textarea>
+      </div>
+      
+
+  
+      <button type="submit" class="btn btn-warning text-light">Edit</button>
+    </form>
+  </div>
+  
+  
+  <div class="container my-5">
+    <form action="/profile/upload_thumbnail" method="post" enctype="multipart/form-data">
+      <div class="">
+        <h4>Edit the thumbnail</h4>
+      </div>
+     
+      <div class="mb-3 mt-3">
+        <label for="imageInput">Select a new thumbnail:</label>
+        <input type="file" class="form-control" id="imageInput" name="thumbnail" accept="image/*">
+      </div>
+  
+      <button type="submit" class="btn btn-warning text-light">Upload</button>
+    </form>
+  </div>
+
+
+  <div class="container my-5">
+    <form action="/profile/video_delete/<%= video._id %>" method="post">
+      <div class="">
+        <h4>Delete the video</h4>
+      </div>
+     
+  
+      <button type="submit" class="btn btn-danger text-light">Delete</button>
+    </form>
+  </div>
+
+
+</body>
+</html>

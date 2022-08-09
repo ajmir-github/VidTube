@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!-- Head imports -->
+  <%-include("./partials/head")%>
+
+
+<body>
+  
+  <!-- navbar imports -->
+  <%-include("./partials/navbar")%>
+
+
+  <div class="container-fluid bg-dark text-light py-5">
+    <!-- main row -->
+    <div class="row">
+      <!-- Sidebar -->
+      <%-include("./partials/sidebar")%>
+
+      <div class="col-md-9 container-fluid">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        
+          <% channels.forEach(channel=>{ %>
+            <div class="col">
+              <div class="card shadow-sm" style="background:rgb(50, 50, 50);">
+                <img class="card-img-top my-2" style="object-fit: contain;" width="100%" height="225" src="/img/<%= channel.channelIcon %>" alt="" >
+                <div class="card-body">
+                  <h4 class="card-title"><%= channel.channelName %></h4>
+                  <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                      <a class="btn btn-sm btn-outline-danger" href="/channel/<%= channel._id %>">View the channel</a>
+                      <!-- <button type="button" class="btn btn-sm btn-outline-secondary">View the channel</button> -->
+                      <!-- <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button> -->
+                    </div>
+                    <small class="text-danger">Views: <%= channel.views %></small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+  
+          
+  
+        </div>
+  
+        <!-- pagination row -->
+        <div class="row my-4 justify-content-center">
+          <div class="btn-group" style="width: 300px;">
+            <% if(page.current > 1) { %>
+              <a class="btn btn-outline-danger" href="?page=<%= page.current - 1 %>">Previous</a>
+            <% } %>
+            <a class="disabled btn btn-danger" href="#"><%= page.current %></a>
+            <% if(page.hasPosts){ %>
+              <a class="btn btn-outline-danger" href="?page=<%= page.current + 1 %>">Next</a>
+            <% } %>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  
+  </div>
+
+
+  <!-- footer -->
+  <%-include("./partials/footer")%>
+  
+  
+</body>
+</html>
