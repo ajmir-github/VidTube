@@ -20,6 +20,6 @@ exports.uploadFile = (req, inputName = "file", dir = "uploads")=> new Promise((r
     if(error) reject({
       message: "Server failed to upload the file!"
     });
-    resolve(fileName);
+    resolve([fileName, filePath]);
   });
 })

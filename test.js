@@ -1,19 +1,6 @@
-const {
-  serilizeSpecialChar
-} = require("./libs/serilizeSpecialChar");
+let strs = ["a", "b", "c", "a"];
 
 
-const sentence = "I love C++.";
-const word = serilizeSpecialChar("C++");
+let uniques = new Set(strs);
 
-const pattern = new RegExp("c\+\+", "ig");
-const found = pattern.test(word);
-
-
-console.log({
-  sentence,
-  word,
-  pattern,
-  found
-})
-
+console.log(uniques)

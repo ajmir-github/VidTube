@@ -10,6 +10,13 @@ const {
 exports.signInUser = async (req, res, next)=>{
   try {
     const { username, password } = req.body;
+    // make sure that the inputs are sent
+    if( (typeof username === "undefined")
+      ||  (typeof password === "undefined")
+    ) throw {
+      message:"Please have the inputs filled!"
+    };
+
     // validate the inputs
     const foundUsername = await channelModel.findOne({username});
     // if not found
@@ -25,7 +32,10 @@ exports.signInUser = async (req, res, next)=>{
       status:400
     };
     // save the user in the payload
-    req.payload = { user: foundUsername };
+    req.payload = {
+      ...req.payload,
+      user: foundUsername
+    };
     next();
 
   } catch ({message, status}) {
@@ -109,7 +119,8 @@ exports.signCookie = async(req, res)=>{
   try {
     // create a cookie
     const token = await secureToken.sign({
-      _id:req.payload.user._id.toString()
+      _id:req.payload.user._id.toString(),
+      username:req.payload.username,
     });
     res.cookie(process.env.COOKIE_NAME ,token);
     res.redirect("/profile");
@@ -125,19 +136,33 @@ exports.signCookie = async(req, res)=>{
 
 
 exports.signUp = async (req, res)=>{
-  // *** make sure not to create dublicated usernames
-  // Make the input ready
-  const inputs = {...req.body};
-  if(typeof req.body.password !== "undefined")
-    inputs.password = await encrypt.hash(req.body.password);
-  // create a channel in the database
-  const newChannel = new channelModel(inputs);
-  const createdChannel = await newChannel.save();
-  // *** response
-  res.render("signIn", {
-    pageName:"Sign in",
-    notice:{
-      message:"Your channel has created! Now you can sign in!"
-    }
-  });
+  try{
+    // Make the input ready
+    const inputs = {...req.body};
+    // avoid username dublication
+    if(!!await channelModel.findOne({
+      username:inputs.username
+    })) throw {
+        message:"A channel is already created by this username!"
+      };
+    
+    if(typeof req.body.password !== "undefined")
+      inputs.password = await encrypt.hash(req.body.password);
+    // create a channel in the database
+    const newChannel = new channelModel(inputs);
+    const createdChannel = await newChannel.save();
+    // *** response
+    res.render("signIn", {
+      pageName:"Sign in",
+      notice:{
+        message:`Dear ${createdChannel.fullName}, your channel has created! Now you can sign in!`
+      }
+    });
+  } catch({message}){
+    // Error
+    res.render("signIn", {
+      pageName:"Sign in",
+      error:{ message: (message || "Server failed to response!") },
+    });
+  }
 };

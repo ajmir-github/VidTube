@@ -13,7 +13,8 @@ const {
 
 router.get("/sign_in", onlySignOuts, (req, res)=>{
   res.render("signIn", {
-    pageName:"Sign in"
+    pageName:"Sign in",
+    ...req.payload,
   });
 });
 

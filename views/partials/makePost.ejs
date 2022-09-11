@@ -1,0 +1,129 @@
+<!-- Import axios for this modal -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js" integrity="sha512-odNmoc1XJy5x1TMVMdC7EMs3IVdItLPlCeL5vSUPN2llYKMJ2eByTTAIiiuqLg+GdNr9hF6z81p27DArRFKT7A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<style>
+  .modal-content{
+    /* background-color: white; */
+    color: black;
+  }
+</style>
+
+<!-- Modal One Uploading the video -->
+<div class="modal fade" id="uploadingModal" tabindex="-1" aria-labelledby="uploadingModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="uploadingModalLabel">Uploading ...</h5>
+      </div>
+      <div class="modal-body">
+        <div class="progress" style="height: 40px;">
+          <div id="progressBar" class="progress-bar  progress-bar-striped progress-bar-animated" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" onclick="cancelUploading()" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Uploading file form -->
+<div class="container my-5">
+  <form action="/profile/upload_video" method="post" enctype="multipart/form-data" id="uploadForm">
+    <div class="">
+      <h4>Upload a video</h4>
+    </div>
+    <div class="mb-3 mt-3">
+      <label for="title" class="form-label">Title:</label>
+      <input required type="text" class="form-control" id="title" placeholder="Enter the title" name="title">
+    </div>
+
+    <div class="mb-3 mt-3">
+      <label for="keywords" class="form-label">Keywords:</label>
+      <input required type="text" class="form-control" id="keywords" placeholder="Enter the title" name="keywords">
+    </div>
+
+    <div class="mb-3 mt-3">
+      <label for="description">descriptions:</label>
+      <textarea required class="form-control" rows="5" id="description" name="description"></textarea>
+    </div>
+    
+    <div class="mb-3 mt-3">
+      <label for="videoInput">Select a video:</label>
+      <input required type="file" class="form-control" id="videoInput" name="video" accept="video/*">
+    </div>
+    
+    <div class="mb-3 mt-3">
+      <label for="imageInput">Select a thumbnail:</label>
+      <input required type="file" class="form-control" id="imageInput" name="thumbnail" accept="image/*">
+    </div>
+
+    <button required type="submit" class="btn btn-primary" >Upload</button>
+  </form>
+</div>
+
+
+
+
+
+<script>
+  let cancelTokenSource = axios.CancelToken.source();
+  const progressBar = $("#progressBar");
+  function progressbarTo(percent) {
+    const strPercent = `${percent}%`
+    progressBar.css({width: strPercent});
+    progressBar.text(strPercent);
+  }
+  function redirect(link) {
+    window.location.href = link;
+  }
+  function cancelUploading() {
+    cancelTokenSource.cancel();
+  }
+  // toggle modal
+  const uploadingModal = new bootstrap.Modal($("#uploadingModal"));
+
+
+  function submitForm(formElement) {
+    const headers = { 'Content-Type': 'multipart/form-data' };
+    cancelTokenSource = axios.CancelToken.source();
+    progressbarTo(0);
+    uploadingModal.show();
+    // server request
+    axios.post(
+      "/profile/upload_video",
+      new FormData(formElement),
+      {
+        headers,
+        onUploadProgress: function (e) {
+          let precent = Math.floor((e.loaded/e.total) * 100);
+          progressbarTo(precent);
+        },
+        cancelToken: cancelTokenSource.token
+      }
+    )
+      .then(({data:{ message, link }})=>{
+        alert(message);
+        if(confirm("Do you want to see the post?")){
+          redirect(link);
+        } else {
+          formElement.reset();
+          uploadingModal.hide();
+        }
+      })
+      .catch(err=>{
+        console.log({err})
+        alert("Please try again later!");
+      })
+  }
+
+  $("#uploadForm").on("submit", e =>{
+    e.preventDefault();
+    submitForm(e.target);
+  })
+  
+
+
+  
+</script>

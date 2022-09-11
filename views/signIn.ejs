@@ -14,47 +14,61 @@
     <%-include("./partials/noticeBox")%>
   </div>
 
-  <div class="container py-2">
+  <div class="container">
     <div class="row justify-content-center">
 
-      <form class="col-12 col-md-4 my-4" action="/auth/sign_in" method="post">
+      <form class="col-12 my-4" action="/auth/sign_in" method="post">
         <h2>Sign in</h2>
-        <div class="mb-3">
-          <label for="username" class="form-label">Username:</label>
-          <input required type="text" class="form-control" id="username" name="username">
+
+        <div class="form-floating my-3 text-dark">
+          <input required type="text" class="form-control" id="username" placeholder="Enter username" name="username">
+          <label for="username">Username</label>
         </div>
-        <div class="mb-3">
-          <label for="password" class="form-label">Password:</label>
-          <input required type="password" class="form-control" id="password" name="password">
+       
+        <div class="form-floating my-3 text-dark">
+          <input required type="password" class="form-control" id="password" placeholder="Enter password" name="password">
+          <label for="password">Password</label>
         </div>
+       
         <div class="col">
           <input type="submit" class="btn btn-outline-danger form-control" value="Sign in">
         </div>
       </form>
 
       <!-- sign in form -->
-      <form class="col-12 col-md-4 my-4" action="/auth/sign_up" method="post">
+      <form class="col-12 my-4" action="/auth/sign_up" method="post">
         <h2>Sign Up</h2>
-        <div class="mb-3">
-          <label for="username" class="form-label">Username:</label>
-          <input required type="text" class="form-control" id="username" name="username">
+        <div class="form-floating my-3 text-dark">
+          <input required type="text" class="form-control" id="username" placeholder="Enter username" name="username">
+          <label for="username">Username</label>
+        </div>
+       
+        <div class="form-floating my-3 text-dark">
+          <input required type="password" class="form-control" id="password" placeholder="Enter password" name="password">
+          <label for="password">Password</label>
         </div>
   
-        <div class="mb-3">
-          <label for="password" class="form-label">Password:</label>
-          <input required type="password" class="form-control" id="password" name="password">
+        <div class="form-floating my-3 text-dark">
+          <input required type="text" class="form-control" id="fullName" placeholder="Enter Full name" name="fullName">
+          <label for="fullName">Full name</label>
+        </div>
+
+        <div class="form-floating my-3 text-dark">
+          <input required type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+          <label for="email">E-mail</label>
+        </div>
+  
+        <div class="form-floating my-3 text-dark">
+          <input required type="text" class="form-control" id="channelName" placeholder="Enter channel name" name="channelName">
+          <label for="channelName">Channel name</label>
         </div>
   
   
-        <div class="mb-3">
-          <label for="email" class="form-label">Email:</label>
-          <input required type="email" class="form-control" id="email" name="email">
+        <div class="form-floating my-3 text-dark">
+          <textarea class="form-control" rows="5" style="min-height: 140px;" placeholder="Describe your channel here" id="description" name="description"></textarea>
+          <label for="description">Channel description</label>
         </div>
-        <div class="mb-3">
-          <label for="channelName" class="form-label">channel name:</label>
-          <input required type="text" class="form-control" id="channelName" name="channelName">
-        </div>
-  
+
         <div class="col">
           <input type="submit" class="btn btn-outline-danger form-control" value="Sign up">
         </div>

@@ -31,8 +31,6 @@
   </div>
 
 
-
-
   <div class="container my-5">
     <form action="/profile/upload_thumbnail" method="post" enctype="multipart/form-data">
       <div class="">
@@ -49,40 +47,8 @@
   </div>
   
 
-  <div class="container my-5">
-    <form action="/profile/upload_video" method="post" enctype="multipart/form-data">
-      <div class="">
-        <h4>Upload a video</h4>
-      </div>
-      <div class="mb-3 mt-3">
-        <label for="title" class="form-label">Title:</label>
-        <input type="text" class="form-control" id="title" placeholder="Enter the title" name="title">
-      </div>
-
-      <div class="mb-3 mt-3">
-        <label for="keywords" class="form-label">Keywords:</label>
-        <input type="text" class="form-control" id="keywords" placeholder="Enter the title" name="keywords">
-      </div>
-
-      <div class="mb-3 mt-3">
-        <label for="description">descriptions:</label>
-        <textarea class="form-control" rows="5" id="description" name="description"></textarea>
-      </div>
-      
-      <div class="mb-3 mt-3">
-        <label for="videoInput">Select a video:</label>
-        <input type="file" class="form-control" id="videoInput" name="video" accept="video/*">
-      </div>
-      
-      <div class="mb-3 mt-3">
-        <label for="imageInput">Select a thumbnail:</label>
-        <input type="file" class="form-control" id="imageInput" name="thumbnail" accept="image/*">
-      </div>
-  
-      <button type="submit" class="btn btn-primary">Upload</button>
-    </form>
-  </div>
-  
+  <!-- makePost imports -->
+  <%-include("./partials/makePost")%>
 
 </body>
 </html>

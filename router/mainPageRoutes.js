@@ -4,57 +4,38 @@ const { videoModel } = require("../models/videoModel");
 const { channelModel } = require("../models/channelModel");
 
 
-// Global vars
-let departments = [];
-
-
-
-// Update global vars
-const updateDepartments = async()=>{
-  try{
-    const posts = await videoModel.find({}, "keywords -_id")
-    // flat array => [].concat(...array)
-    const words = [].concat(...posts.map(({keywords})=>
-      keywords.split(",").map(a=>a.trim())
-    ))
-    // remove the duplicated words
-    const uniqueKeywords = new Set(words);
-    
-    let keywords = [];
-    uniqueKeywords.forEach(word=>{
-      if(word !== ""){
-        let times = 0
-        try{
-          const pattern = new RegExp(word, "ig");
-          words.forEach(w =>{
-            if (pattern.test(w)) times++
-            // if (matchString(word, w)) times++
-          });
-        } catch(e){
-          // if error with the regular Expression
-        }
-        keywords.push([word, times]);
-      }
-    })
-    
-    departments = keywords.sort((a, b)=>b[1]-a[1])
-    const numberofDps = 10;
-    if(departments.length > numberofDps){
-      departments.length =  numberofDps;
-    }
-    departments = departments.map(d => d[0]);
-  } catch(error){
-    console.log({error})
-  }
+// if the website is empty
+let commingSoonPage = true;
+async function isDatabaseEmpty() {
+  const hasNoChannels = (await channelModel.find().limit(1)).length === 0;
+  const hasNoVideos = (await videoModel.find().limit(1)).length === 0;
+  commingSoonPage =  hasNoChannels || hasNoVideos;
 }
-// initiate global vars
-updateDepartments();
-
 
 
 router.get("/", async (req, res)=>{
+  // replace the home page to a comming soon
+  if(commingSoonPage){
+    await isDatabaseEmpty();
+    if(commingSoonPage){
+      return res.render("commingSoon", {
+        SEO:{
+          title:"VidTube",
+          author:"Ajmir Raziqi",
+          keywords: "Short videos, Songs, Educational Videos",
+          description:"I have created this website so you could make a video that could impact others, and upload it here. Please do not hesitate to do so!"
+        },
+      });
+    }
+  }
+  // Vars
   let query = {};
-
+  let SEO = {
+    title:"VidTube",
+    author:"Ajmir Raziqi",
+    keywords: req.payload.departments.slice(0, 6).join(", "),
+    description:"I have created this website so you could make a video that could impact others, and upload it here. Please do not hesitate to do so!"
+  };
   // if search query given
   if(typeof req.query.search !== "undefined"){
     const searchPattern = { $regex: req.query.search, $options: 'gi' };
@@ -64,16 +45,23 @@ router.get("/", async (req, res)=>{
       { keywords: searchPattern }
     ];
   }
-
+  
   // if department query given
   if(typeof req.query.department !=="undefined"){
     const departmentPattern = { $regex: req.query.department, $options: 'gi' };
     query = {
       keywords: departmentPattern
     };
+    // this department must be at the begining to give it a push
+    SEO.keywords = (
+      [...new Set([
+        req.query.department,
+        ...SEO.keywords.split(", ")
+      ])]
+    ).join(", ")
   }
 
-  const limitPosts = 9;
+  const limitPosts = 15;
   // pagination
   let page = { current: (+req.query?.page || 1) };
   page.previousPage = page.current - 1;
@@ -90,11 +78,10 @@ router.get("/", async (req, res)=>{
   page.hasPosts = (videos.length === limitPosts);
 
   res.render("mainPage", {
-    pageName:"Home",
+    SEO,
     videos,
     page,
     ...req.payload,
-    departments
   });
 });
 
@@ -104,25 +91,63 @@ router.get("/", async (req, res)=>{
 
 // single video
 router.get("/video/:id", async (req, res)=>{
+  // if searched redirect to the main page
+  if(typeof req.query.search !== "undefined")
+    return res.redirect(`/?search=${req.query.search}`);
+
+  // videos from database
   const video = await videoModel
     .findById(req.params.id)
     .populate("channel");
 
-  res.render("singleVideo", {
-    pageName:"name of video",
-    video,
-    ...req.payload,
-    departments
-  });
 
-  // // increase the views of this video
-  // video.views++;
-  // await video.save();
+  // related videos Query
+  let relatedVideosQuery = {};
+  // prepare the keywords
+  let keywords = video.keywords
+    .split(",")
+    .map(s=> ({
+      keywords:{
+        $regex:s.trim(),
+        $options: 'gi'
+      }
+    }));
+  // create a query, excluding the video itself
+  if(keywords.length > 0)
+    relatedVideosQuery = {
+      ["$and"]:[
+        {
+          _id: { ["$ne"]: video._id },
+          ["$or"]:keywords
+        },
+      ]
+    }
+  // exec the query
+  const videos = await videoModel
+    .find(relatedVideosQuery)
+    .limit(8)
+    .sort({date:-1})
+    .populate("channel", "_id channelName channelIcon");
+
+  res.render("singleVideo", {
+    SEO:{
+      title:`VidTube: ${video.title}`,
+      author:video.channel.fullName,
+      keywords:video.keywords,
+      description:video.description,
+    },
+    video,
+    videos,
+    ...req.payload,
+  });
 
   // increase the views of the channel
   const theChannel = await channelModel.findById(video.channel.id);
   theChannel.views++;
   await theChannel.save();
+  // increase the views of the video
+  video.views++;
+  await video.save();
 });
 
 
@@ -139,7 +164,7 @@ router.get("/channels", async (req, res)=>{
   }
 
 
-  const limitPosts = 9;
+  const limitPosts = 15;
   // pagination
   let page = { current: (+req.query?.page || 1) };
   page.previousPage = page.current - 1;
@@ -156,11 +181,15 @@ router.get("/channels", async (req, res)=>{
   page.hasPosts = (channels.length === limitPosts);
 
   res.render("channels", {
-    pageName:"Channels",
+    SEO:{
+      title:"VidTube: Channels",
+      author:"Ajmir Raziqi",
+      keywords: req.payload.departments.slice(0, 6).join(", "),
+      description:"I have created this website so you could make a video that could impact others, and upload it here. Please do not hesitate to do so!"
+    },
     channels,
     page,
     ...req.payload,
-    departments
   });
 })
 
@@ -168,7 +197,7 @@ router.get("/channels", async (req, res)=>{
 
 
 router.get("/channel/:id", async (req, res)=>{
-  const limitPosts = 9;
+  const limitPosts = 15;
   // pagination
   let page = { current: (+req.query?.page || 1) };
   page.previousPage = page.current - 1;
@@ -191,15 +220,18 @@ router.get("/channel/:id", async (req, res)=>{
   page.hasPosts = (channel.videos.length === limitPosts);
   
   res.render("singleChannelPage", {
-    pageName: req.params.id,
+    SEO:{
+      title:`VidTube: ${channel.channelName}`,
+      author:channel.fullName,
+      description:channel.description,
+    },
     channel,
     ...req.payload,
-    departments,
     page
   });
 
-  // increase the views of this channel
-  channel.views++;
+  // increase the views of this channel 2x
+  channel.views += 5;
   await channel.save();
 });
 

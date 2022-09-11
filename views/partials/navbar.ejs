@@ -12,16 +12,18 @@
         </li>
 
         <!-- Departments -->
-        <!-- <% if(typeof departments !== "undefined"){ %>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="dropdown07" data-bs-toggle="dropdown" aria-expanded="false">Departments</a>
-            <ul class="dropdown-menu" aria-labelledby="dropdown07">
-              <% departments.forEach(department =>{ %>
-                <li><a class="dropdown-item" href="/?department=<%= department %>"><%= department %></a></li>
-              <% }) %>
-            </ul>
-          </li>
-        <% } %> -->
+        <% if(typeof departments !== "undefined"){ %>
+          <% if(departments.length > 0){ %>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="dropdown07" data-bs-toggle="dropdown" aria-expanded="false">Departments</a>
+              <ul class="dropdown-menu" aria-labelledby="dropdown07">
+                <% departments.forEach(department =>{ %>
+                  <li><a class="dropdown-item" href="/?department=<%= department %>"><%= department %></a></li>
+                <% }) %>
+              </ul>
+            </li>
+          <% } %>
+        <% } %>
 
 
         <li class="nav-item">

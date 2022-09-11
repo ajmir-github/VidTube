@@ -5,7 +5,8 @@ const {
 } = require("../controllers/authController");
 const { videoModel } = require("../models/videoModel");
 const {
-  fileUploader:{ uploadFile }
+  fileUploader:{ uploadFile },
+  imageProcessor:{ resizeImage }
 } = require("../libs");
 
 
@@ -18,14 +19,30 @@ router.get("/",  onlySignIns, (req, res)=>{
 
 
 
-
-
 router.post("/upload_video",  onlySignIns, async (req, res)=>{
   try{
     
-    const uploadedVideofileName = await uploadFile(req, "video", "vid");
-    const uploadedImageFileName = await uploadFile(req, "thumbnail", "img");
+    // upload the video
+    const [
+      uploadedVideofileName
+    ] = await uploadFile(req, "video", "vid");
+    
+
+    // upload and resize the image
+    const [
+      uploadedImageFileName, uploadedImageFilePath
+    ] = await uploadFile(req, "thumbnail", "img");
   
+
+
+    await resizeImage(
+      uploadedImageFilePath,
+      uploadedImageFilePath,
+      { h:480, w:640 },
+      50
+    );
+
+
     const theChannel = req.payload?.auth?.theChannel;
     // save the video
     const newVideo = new videoModel({
@@ -41,29 +58,36 @@ router.post("/upload_video",  onlySignIns, async (req, res)=>{
 
     
 
-    res.render("noticePage", {
-      pageName:"Success!",
-      notice:{ message:"The video was uploaded successfully!" },
-      link:{
-        href:`/video/${createdVideo._id}`,
-        message:"view the uploaded video!"
-      },
-      ...req.payload
+    res.status(201).send({
+      message:"Video has been successfully posted!",
+      link:`/video/${newVideo._id}`
     });
 
   } catch ({message}){
-    res.render("noticePage", {
-      pageName:"Error!",
-      error:{ message },
-      ...req.payload
-    });
+    console.log({message})
+    res.status(400).send({
+      message
+    })
   }
 
+  // update the departments
+  req.payload.updateDepartments();
 });
 
-
+// channel thumbnial as icon
 router.post("/upload_thumbnail", onlySignIns, async (req, res)=>{
-  const uploadedImageFileName = await uploadFile(req, "thumbnail", "img");
+  // upload and resize the image
+  const [
+    uploadedImageFileName,
+    uploadedImageFilePath
+  ] = await uploadFile(req, "thumbnail", "img");
+  
+  await resizeImage(
+    uploadedImageFilePath,
+    uploadedImageFilePath,
+    { h:240, w:240 }
+  );
+
   const channel = req.payload.auth.theChannel;
   channel.channelIcon = uploadedImageFileName;
   await channel.save();
@@ -72,7 +96,8 @@ router.post("/upload_thumbnail", onlySignIns, async (req, res)=>{
     pageName:"Success!",
     notice:{
       message:"You thumbnail has uploaded!"
-    }
+    },
+    ...req.payload
   });
 });
 
@@ -112,6 +137,7 @@ router.get("/video_edit/:id", onlySignIns, async (req, res)=>{
       ...req.payload
     });
   }
+
 });
 
 router.post("/video_edit/:id", onlySignIns, async (req, res)=>{
@@ -156,8 +182,62 @@ router.post("/video_edit/:id", onlySignIns, async (req, res)=>{
       ...req.payload
     });
   }
+  // update the departments
+  req.payload.updateDepartments();
 })
 
+
+router.post("/video_uploadThumbnail/:id", onlySignIns, async(req, res)=>{
+  try{
+    const video = await videoModel.findById(req.params.id);
+    // if not found
+    if(video === null) throw {
+      status:404,
+      message:"No video is found!"
+    }
+    
+    // if not the coorespondent user
+    const videoID = (video.channel?._id || "").toString();
+    const channelID = (req.payload?.auth?.theChannel?._id || "").toString();
+    if(videoID !== channelID) throw {
+      status:401,
+      message:"You are not allowed to edit this video!"
+    };
+
+    // upload the file 
+    const [uploadedImageFileName, uploadedImageFilePath ] = await uploadFile(req, "thumbnail", "img");
+    // resize the image
+    await resizeImage(
+      uploadedImageFilePath,
+      uploadedImageFilePath,
+      { h:480, w:640 },
+      50
+    );
+    
+    // inject the new data
+    video.thumbnail = uploadedImageFileName;
+    await video.save();
+
+    res.render("noticePage", {
+      pageName:"Notice!",
+      notice:{
+        message:"The video is successfully edited!"
+      },
+      link:{
+        message:"watch the video",
+        href:"/video/" + video._id 
+      },
+      ...req.payload
+    });
+
+  } catch({message}){
+    res.render("NoticePage", {
+      pageName:"Error!",
+      error:{ message },
+      ...req.payload
+    });
+  }
+});
 
 router.post("/video_delete/:id", onlySignIns, async(req, res)=>{
   try {
@@ -187,7 +267,8 @@ router.post("/video_delete/:id", onlySignIns, async(req, res)=>{
       link:{
         message:"go to your profile page!",
         href:"/profile"
-      }
+      },
+      ...req.payload
     });
 
   } catch ({message}) {
@@ -197,7 +278,14 @@ router.post("/video_delete/:id", onlySignIns, async(req, res)=>{
       ...req.payload
     });
   }
+  // update the departments
+  req.payload.updateDepartments();
 });
+
+
+
+
+
 
 
 module.exports = router;

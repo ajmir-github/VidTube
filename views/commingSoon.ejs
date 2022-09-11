@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!-- Head imports -->
+  <%-include("./partials/head")%>
+
+<body class="bg-dark text-light">
+  
+  <style>
+    #background-video {
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      z-index: -1;
+    }
+    .container-fluid{
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+  </style>
+
+  <video id="background-video" autoplay loop muted>
+    <source src="/assets/commingSoonBg.mp4" type="video/mp4">
+  </video>
+
+  <div class="container-fluid">
+    <div class="row align-content-between" style="min-height: 100vh;">
+
+      <div style="height: 60vh;" class="col-12 row align-content-end justify-content-center">
+        <div class="col text-center">
+          <h1 class="h1"><span class="text-danger">Vid</span>Tube</h1>
+          <h2 class="h2">Comming Soon...</h2>
+        </div>
+      </div>
+
+      <div style="height: 40vh;" class="col-12 row align-content-end justify-content-start">
+        <h1 class="h6">Developed By <a href="mailto:ajmir.ng3@gmail.com">Ajmir Raziqi</a></h1>
+        <h1 class="h6">For sign-up click <a href="/auth/sign_in">here</a></h1>
+      </div>
+
+
+    </div>
+  </div>
+  
+</body>
+</html>

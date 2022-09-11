@@ -13,6 +13,16 @@ const channelSchema = new mongoose.Schema({
     type:String,
     required:true
   },
+  fullName:{
+    type:String,
+    required:true,
+    default:"Unknown"
+  },
+  description:{
+    type:String,
+    required:true,
+    default:"Not given!"
+  },
   channelName:{
     type:String,
     required:true

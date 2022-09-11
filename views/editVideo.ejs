@@ -9,13 +9,6 @@
   <!-- navbar imports -->
   <%-include("./partials/navbar")%>
 
-
-
-
-
-
-
-
   <div class="container my-5">
     <form method="post">
       <div class="">
@@ -37,16 +30,13 @@
           <%=video.description %>
         </textarea>
       </div>
-      
-
   
       <button type="submit" class="btn btn-warning text-light">Edit</button>
     </form>
   </div>
   
-  
   <div class="container my-5">
-    <form action="/profile/upload_thumbnail" method="post" enctype="multipart/form-data">
+    <form action="/profile/video_uploadThumbnail/<%= video._id %>" method="post" enctype="multipart/form-data">
       <div class="">
         <h4>Edit the thumbnail</h4>
       </div>
@@ -60,13 +50,11 @@
     </form>
   </div>
 
-
   <div class="container my-5">
     <form action="/profile/video_delete/<%= video._id %>" method="post">
       <div class="">
         <h4>Delete the video</h4>
       </div>
-     
   
       <button type="submit" class="btn btn-danger text-light">Delete</button>
     </form>

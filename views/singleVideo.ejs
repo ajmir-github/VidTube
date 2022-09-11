@@ -11,68 +11,66 @@
   <%-include("./partials/navbar")%>
 
 
-  <style>
-    .vid-avator img{
-      width: 42px;
-      height: 42px;
-      margin-right: 1rem;
-    }
-
-  </style>
   
+
   <div class="container-fluid my-4">
-    
-    
-    <div class="row justify-content-center bg-dark my-4">
-      <video style="max-height: 75vh;" src="/vid/<%= video.src %>" controls poster="/img/<%= video.thumbnail %>">
-        <p>Your browser doesn't support HTML5 video. Here is a <a href="/vid/<%= video.src %>">link to the video</a> instead.</p>
-      </video>
-    </div>
+    <!-- the video -->
+    <div class="row">
+      <!-- video on left like youtube -->
+      <div class="col-12 col-lg-8">
+        <video controls class="rounded shadow" style="width: 100%; max-height: 100vh;" src="/vid/<%= video.src %>" poster="/img/<%= video.thumbnail %>">
+          <p>Your browser doesn't support HTML5 video. Here is a <a href="/vid/<%= video.src %>">link to the video</a> instead.</p>
+        </video>
 
-    <div class="row px-4">
-      <!-- Sidebar -->
-      <%-include("./partials/sidebar")%>
+        <div class="btn-group my-2 w-100">
+          <a class="btn btn-outline-danger" download="<%= video.title %>" href="/vid/<%= video.src %>">Download</a>
 
-
-      <div class="col-md-9 container-fluid">
-
-        <div class="row">
-          <h1><%= video.title %></h1>
-          
-          <a class="my-2 rounded vid-avator d-flex justify-content-start align-items-center flex-wrap btn btn-outline-danger" href="/channel/<%= video.channel._id %>">
-            <img class="rounded-circle" src="/img/<%= video.channel.channelIcon || channel.channelIcon %>" alt="">
-            <span style="font-size: 1.1rem;"><%= video.channel.channelName %></span>
-          </a>
-        </div>
-
-        <div class="row">
-          <i class="text-muted"><%= video.date.toDateString() %></i>
-          <!-- <div><span class="badge bg-info">Views: <%= video.views %></span></div> -->
-          <div class="my-2">
-            <% video.keywords.split(",").forEach(keyword =>{ %>
-              <a href="/?department=<%= keyword %>" class="btn btn-sm btn-outline-light"><%= keyword %></a>
-            <% }) %>
-          </div>
-          <p><%= video.description %></p>
-        </div>
-
-        <div class="row">
           <% if(typeof auth !== "undefined"){ %>
             <% if(auth.signedIn && video.channel._id.toString() === auth.theChannel._id.toString()) { %>
-              <div class="btn-group" role="group" aria-label="Basic example">
-                
-                <a href="/profile/video_edit/<%= video._id %>" class="btn fw-bold btn-sm btn-primary">Edit</a>
-              </div>
+              <a href="/profile/video_edit/<%= video._id %>" class=" btn btn-outline-primary">Edit</a>
             <% } %>
           <% } %>
         </div>
+
+      </div>
+      <!-- description on right -->
+      <div class="col-12 col-lg-3">
+        <h1 class="h3"><%= video.title %></h1>
+        
+        <a class="my-1 rounded border-0 vid-avator d-flex justify-content-start align-items-center btn btn-outline-light" href="/channel/<%= video.channel._id %>">
+          <img class="rounded-circle" src="/img/<%= video.channel.channelIcon %>" alt="">
+          <span class="mx-2" style="font-size: 1.1rem;">Afghan Code Camp
+            <div class="col-12 card-data text-start">
+              <i><%= video.date.toDateString() %></i>
+            </div>
+          </span>
+        </a>
+          
+
+        <div>
+          <% video.keywords.split(",").forEach(keyword =>{ %>
+            <a href="/?department=<%= keyword %>" class="btn btn-sm btn-outline-light m-1"><%= keyword %></a>
+          <% }) %>
+        </div>
+        <p><%= video.description %></p>
+
+        <br>
+        <span class="badge bg-success"> Views: <%= video.views %></span>
+
+
+       
+
+        
         
 
       </div>
-
     </div>
-
   </div>
+
+  <!-- VideosContainer -->
+  <%-include("./partials/videosContainer", { videosCaption:"Related Videos"})%>
+
+
   
   <!-- footer -->
   <%-include("./partials/footer")%>
