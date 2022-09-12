@@ -4,7 +4,6 @@ const {
   signCookie,
   signInUser,
   signUp,
-  cookieAuth,
   onlySignOuts
 } = require("../controllers/authController");
 

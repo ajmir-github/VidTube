@@ -6,8 +6,10 @@ const {
 const { videoModel } = require("../models/videoModel");
 const {
   fileUploader:{ uploadFile },
-  imageProcessor:{ resizeImage }
+  imageProcessor:{ resizeImage },
+  fsSimple:{ deleteFile }
 } = require("../libs");
+const path = require("path");
 
 
 router.get("/",  onlySignIns, (req, res)=>{
@@ -257,6 +259,25 @@ router.post("/video_delete/:id", onlySignIns, async(req, res)=>{
     };
 
     // delete
+    await deleteFile( // delete the thumbnail image
+      path.join(
+        path.resolve("./"),
+        "public",
+        "img",
+        video.thumbnail
+      )
+    );
+    
+    await deleteFile( // delete the video
+      path.join(
+        path.resolve("./"),
+        "public",
+        "vid",
+        video.src
+      )
+    );
+
+
     await video.remove();
 
     res.render("NoticePage", {

@@ -6,3 +6,4 @@ exports.jsSimple = require("./jsSimple");
 exports.fileUploader = require("./fileUploader");
 exports.formatDate = require("./formatDate");
 exports.imageProcessor = require("./imageProcessor");
+exports.fsSimple = require("./fsSimple");
