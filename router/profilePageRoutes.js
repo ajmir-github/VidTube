@@ -60,14 +60,14 @@ router.post("/upload_video",  onlySignIns, async (req, res)=>{
 
     
 
-    res.status(201).send({
+    res.status(201).json({
       message:"Video has been successfully posted!",
       link:`/video/${newVideo._id}`
     });
 
   } catch ({message}){
     console.log({message})
-    res.status(400).send({
+    res.status(400).json({
       message
     })
   }
