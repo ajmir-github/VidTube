@@ -10,10 +10,10 @@ const { globalVars } = require("./controllers/globalVars");
 
 // Global Varaibles
 dotenv.config(".env");
-const { DB_URL, PORT } = process.env;
+const { DB_URL, DB_PASSWORD, PORT } = process.env;
 
 // Database setup
-database(DB_URL);
+database(DB_URL.replace("<password>", DB_PASSWORD));
 
 // Server setup
 const app = express();
